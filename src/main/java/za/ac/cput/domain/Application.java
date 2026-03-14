@@ -62,7 +62,7 @@ public class Application {
         if (this == o) return true;
         if (!(o instanceof Application)) return false;
         Application that = (Application) o;
-        return Objects.equals(applicationId, that.applicationId)
+        return Objects.equals(applicationId, that.applicationId);
     }
 
     @Override
