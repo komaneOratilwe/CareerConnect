@@ -2,7 +2,7 @@ package za.ac.cput.factory;
 
 /*
 Internship.java
-Internship Factory
+InternshipFactory.java
 Author: Refilwe Mabena (231013051)
 Date: 14 March 2026
 */
