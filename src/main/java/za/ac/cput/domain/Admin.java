@@ -1,6 +1,6 @@
 /*
  * Admin.java
- * Student entity class
+ * Admin entity class
  * Author: Magdeline Malahlela (240281721)
  * Date: 18 March 2026
  */
@@ -11,12 +11,11 @@ import java.util.Objects;
 
 public class Admin {
 
-    private String adminId;
-    private String name;
-    private String email;
-    private String password;
+    private final String adminId;
+    private final String name;
+    private final String email;
+    private final String password;
 
-    // Private constructor
     private Admin(Builder builder) {
         this.adminId = builder.adminId;
         this.name = builder.name;
@@ -24,7 +23,6 @@ public class Admin {
         this.password = builder.password;
     }
 
-    // Getters
     public String getAdminId() {
         return adminId;
     }
@@ -41,7 +39,6 @@ public class Admin {
         return password;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Admin{" +
@@ -90,6 +87,14 @@ public class Admin {
 
         public Builder setPassword(String password) {
             this.password = password;
+            return this;
+        }
+
+        public Builder copy(Admin admin) {
+            this.adminId = admin.adminId;
+            this.name = admin.name;
+            this.email = admin.email;
+            this.password = admin.password;
             return this;
         }
 
