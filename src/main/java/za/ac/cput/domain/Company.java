@@ -2,7 +2,7 @@ package za.ac.cput.domain;
 import java.util.Objects;
 
 /*
-Internship.java
+Company.java
 Company entity class
 Author: Sylvia Mahlangu (222954396)
 Date: 24 March 2026
@@ -14,6 +14,7 @@ public class Company {
     private String name;
     private String industry;
     private String contactEmail;
+
 
     private Company(Builder builder) {
         this.companyId = builder.companyId;
