@@ -1,4 +1,4 @@
-package za.ac.cput.test;
+package za.ac.cput.repository.impl;
 
 /*
 InternshipRepositoryTest.java
