@@ -1,18 +1,27 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import java.util.Objects;
 
 /*
  * Student.java
  * Student entity class
  * Author: Ebenezer Kouakou (230480152)
- * Date: 08 March 2026
+ * Date: 10 June 2026
  */
+
+@Entity
 public class Student {
-    private final String studentNumber;
-    private final String name;
-    private final String email;
-    private final String password;
+
+    @Id
+    private String studentNumber;
+    private String name;
+    private String email;
+    private String password;
+
+    protected Student() {
+    }
 
     private Student(Builder builder) {
         this.studentNumber = builder.studentNumber;
@@ -49,9 +58,13 @@ public class Student {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(studentNumber, student.studentNumber) && Objects.equals(name, student.name) && Objects.equals(email, student.email) && Objects.equals(password, student.password);
+        return Objects.equals(studentNumber, student.studentNumber) &&
+                Objects.equals(name, student.name) &&
+                Objects.equals(email, student.email) &&
+                Objects.equals(password, student.password);
     }
 
     @Override
@@ -64,7 +77,6 @@ public class Student {
         private String name;
         private String email;
         private String password;
-
 
         public Builder setStudentNumber(String studentNumber) {
             this.studentNumber = studentNumber;

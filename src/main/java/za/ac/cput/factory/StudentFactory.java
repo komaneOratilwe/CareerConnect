@@ -1,21 +1,24 @@
 package za.ac.cput.factory;
 
 import za.ac.cput.domain.Student;
+import za.ac.cput.util.Helper;
 
 /*
  * StudentFactory.java
  * Student factory class
  * Author: Ebenezer Kouakou (230480152)
- * Date: 08 March 2026
+ * Date: 10 June 2026
  */
 public class StudentFactory {
     public static Student buildStudent(String studentNumber, String name,
                                        String email, String password) {
 
-        if (studentNumber == null || studentNumber.isEmpty() ||
-                name == null || name.isEmpty() ||
-                email == null || email.isEmpty() ||
-                password == null || password.isEmpty()) {
+        if (Helper.isEmptyOrNull(studentNumber) || Helper.isEmptyOrNull(name)
+        || Helper.isEmptyOrNull(password)) {
+            return null;
+        }
+
+        if (!Helper.isValidEmail(email)) {
             return null;
         }
 
