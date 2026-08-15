@@ -2,66 +2,109 @@ package za.ac.cput.domain;
 
 /*
 Internship.java
-Internship entity class
+Internship JPA Entity class
 Author: Refilwe Mabena (231013051)
-Date: 10 March 2026
+Date: 5 August 2026
 */
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
+@Table(name = "internship")
 public class Internship {
-    private String internshipId;
-    private String title;
-    private String description;
-    private String location;
-    private LocalDateTime deadline;
 
-    private Internship(Builder builder) {
-        this.internshipId = builder.internshipId;
-        this.title = builder.title;
-        this.description = builder.description;
-        this.location = builder.location;
-        this.deadline = builder.deadline;
+  @Id 
+  @Column(name = "internship_id")
+  private String internshipId;
+
+  @Column(name = "title", nullable = false)
+  private String title;
+
+  @Column(name = "description", nullable = false)
+  private String description;
+
+
+  @Column(name  = "location", nullable = false)
+  private String location;
+
+
+   @Column(name = "deadline", nullable = false)
+   private LocalDateTime deadline;
+
+//Required by JPA
+public Internship() {
+}
+
+//Constructor used by Builder
+private Internship(Builder builder) {
+  this.internshipId = builder.internshipId;
+  this.title = builder.title;
+  this.description = builder.description;
+  this.location = builder.location;
+  this.deadline = builder.deadline;
+}
+
+//Getters
+
+public String getInternshipId() {
+   return internshipId;
+}
+
+public String getTitle() {
+   return title;
+}
+
+public String getDescription() {
+   return description;
+}
+
+public String getLocation() {
+   return location;
+} 
+
+public LocalDateTime getDeadline() {
+   return deadline;
+}
+
+//Setters (needed for JPA)
+public void setInternshipId(String internshipId) {
+   this.internshipId = internshipId;
+}
+
+public void setTitle(String title) {
+   this.title = title;
+}
+
+public void setDescription(String description) {
+   this.description = description;
+}
+
+public void setLocation(String location) {
+   this.location = location;
+}
+
+public void setDeadline(LocalDateTime deadline) {
+   this.deadline = deadline;
+}
+
+@Override
+public String toString() {
+   return "Internship{" +
+   "InternshipId='" + internshipId + '\'' +
+   ", title='" + title + '\'' +
+   ", description='" + description + '\'' +
+   ", location='" + location + '\'' +
+  ", deadline=" + deadline +
+   '}';
     }
 
-    //Getter
-
-    public String getInternshipId() {
-        return internshipId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public LocalDateTime getDeadline() {
-        return deadline;
-    }
-
-    //toString
-    @Override
-    public String toString() {
-        return "Internship{" +
-                "internshipId='" + internshipId + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", location='" + location + '\'' +
-                ", deadline=" + deadline + 
-                '}';
-    }
-
-    //equals
-
-    @Override
+ @Override
     public boolean equals(Object o) {
         if (!(o instanceof Internship internship)) return false;
         return Objects.equals(internshipId, internship.internshipId);
@@ -69,11 +112,10 @@ public class Internship {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(internshipId);
+        return Objects.hash(internshipId);
     }
 
-    //Builder pattern
-    public static class Builder{
+    public static class Builder {
         private String internshipId;
         private String title;
         private String description;
@@ -104,6 +146,7 @@ public class Internship {
             this.deadline = deadline;
             return this;
         }
+
         public Builder copy(Internship internship) {
             this.internshipId = internship.internshipId;
             this.title = internship.title;
@@ -112,8 +155,13 @@ public class Internship {
             this.deadline = internship.deadline;
             return this;
         }
+
         public Internship build() {
             return new Internship(this);
         }
     }
 }
+
+
+
+  

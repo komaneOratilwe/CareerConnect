@@ -110,7 +110,7 @@ public class StudentServiceTest {
 
         List<Student> mockList = Arrays.asList(student1, student2);
 
-        when(studentRepository.findByName(anyString())).thenReturn(mockList);
+        when(studentRepository.findByNameContainingIgnoreCase(anyString())).thenReturn(mockList);
 
         List<Student> students = studentService.getStudentsByName("xholisa");
 

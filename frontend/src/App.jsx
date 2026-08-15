@@ -1,18 +1,28 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
+import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage';
 
-function App() {
-  return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-900 text-white">
-        <div className="text-center p-8 bg-slate-800 rounded-2xl shadow-xl border border-slate-700">
-          <h1 className="text-4xl font-extrabold text-blue-400 mb-4 animate-bounce">
-            CareerConnect 🎓💼
-          </h1>
-          <p className="text-slate-300 text-lg">
-            Tailwind CSS v4 is successfully configured with Vite!
-          </p>
-        </div>
-      </div>
-  );
+export default function App() {
+    return (
+        <AuthProvider>
+            <Router>
+                <div className="min-h-screen bg-app-bg text-text-main font-sans selection:bg-brand-accent selection:text-app-bg">
+                    <Navbar />
+                    <main>
+                        <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/profile" element={<ProfilePage />} />
+                            <Route path="/signup" element={<SignupPage />} />
+                            <Route path="/login" element={<LoginPage />} />
+                        </Routes>
+                    </main>
+                </div>
+            </Router>
+        </AuthProvider>
+    );
 }
-
-export default App;

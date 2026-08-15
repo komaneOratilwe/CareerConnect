@@ -1,1 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 @import "tailwindcss";
+
+@theme {
+    --color-oxford-blue: #0A2240;
+    --color-solar-orange: #EA580C;
+
+    --color-app-bg: #F4F8FC;
+    --color-card-bg: #FFFFFF;
+    --color-card-hover: #EBF3FA;
+    --color-ui-border: #E2E8F0;
+
+    /* Brand Mapping */
+    --color-brand-primary: #0A2240;
+    --color-brand-primary-hover: #06152B;
+    --color-brand-accent: #0284C7;
+    --color-brand-mint: #059669;
+    --color-brand-warning: #D97706;
+
+    /* Text Mapping */
+    --color-text-main: #0A2240;
+    --color-text-muted: #64748B;
+    --color-text-subtle: #94A3B8;
+
+    /* Typography */
+    --font-heading: 'Plus Jakarta Sans', sans-serif;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}

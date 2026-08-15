@@ -3,11 +3,18 @@ package za.ac.cput.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.ac.cput.domain.Student;
+import za.ac.cput.factory.StudentFactory;
 import za.ac.cput.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+/*
+ * StudentService.java
+ * Student Service Implementation
+ * Author: Ebenezer Kouakou (230480152)
+ * Date: 23 June 2026
+ */
 @Service
 public class StudentService implements IStudentService {
     private final StudentRepository studentRepository;
@@ -19,18 +26,30 @@ public class StudentService implements IStudentService {
 
     @Override
     public Student create(Student student) {
-        if (studentRepository.existsById(student.getStudentNumber())) {
-            System.out.println("Signup Failed: Student number already exists");
+        Student validatedStudent = StudentFactory.buildStudent(
+                student.getStudentNumber(),
+                student.getName(),
+                student.getEmail(),
+                student.getPassword()
+        );
+
+        if (validatedStudent == null) {
+            System.out.println("Signup Failed: Missing or empty fields caught by StudentFactory.");
             return null;
         }
 
-        Optional<Student> existingEmail = studentRepository.findByEmail(student.getEmail());
+        if (studentRepository.existsById(validatedStudent.getStudentNumber())) {
+            System.out.println("Signup Failed: Student number already exists.");
+            return null;
+        }
+
+        Optional<Student> existingEmail = studentRepository.findByEmail(validatedStudent.getEmail());
         if (existingEmail.isPresent()) {
-            System.out.println("Signup Failed: Email is already registered");
+            System.out.println("Signup Failed: Email is already registered.");
             return null;
         }
 
-        return studentRepository.save(student);
+        return studentRepository.save(validatedStudent);
     }
 
     @Override
@@ -67,6 +86,6 @@ public class StudentService implements IStudentService {
 
     @Override
     public List<Student> getStudentsByName(String name) {
-        return studentRepository.findByName(name);
+        return studentRepository.findByNameContainingIgnoreCase(name);
     }
 }
