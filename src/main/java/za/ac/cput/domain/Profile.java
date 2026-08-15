@@ -1,5 +1,8 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,11 +12,20 @@ import java.util.Objects;
  * Author: Oratilwe Komane (230716873)
  * Date: 11 March 2026
  */
+@Entity
 public class Profile {
-    private final String profileId;
-    private final String bio;
-    private final List<String> skills;
-    private final String resumeLink;
+
+    @Id
+    private String profileId;
+    private String bio;
+
+    @ElementCollection
+    private List<String> skills;
+
+    private String resumeLink;
+
+    protected Profile() {
+    }
 
     private Profile(Builder builder) {
         this.profileId = builder.profileId;
@@ -39,6 +51,7 @@ public class Profile {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Profile profile = (Profile) o;
         return Objects.equals(profileId, profile.profileId) &&

@@ -1,0 +1,12 @@
+### Create a Profile
+POST http://localhost:8080/api/profile/create
+Content-Type: application/json
+
+{
+  "bio": "Aspiring software developer",
+  "skills": ["Java", "Spring Boot"],
+  "resumeLink": "https://example.com/resume.pdf"
+}
+
+### Get all Profiles
+GET http://localhost:8080/api/profile/getAll
