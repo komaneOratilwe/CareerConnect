@@ -7,7 +7,14 @@ import za.ac.cput.factory.ProfileFactory;
 import za.ac.cput.repository.IProfileRepository;
 
 import java.util.List;
+import java.util.Optional;
 
+/*
+ * ProfileService.java
+ * ProfileService implementation class
+ * Author: Oratilwe Komane (230716873)
+ * Date: 11 March 2026
+ */
 @Service
 public class ProfileService implements IProfileService {
     private final IProfileRepository profileRepository;
@@ -20,6 +27,7 @@ public class ProfileService implements IProfileService {
     @Override
     public Profile create(Profile profile) {
         Profile built = ProfileFactory.buildProfile(
+                profile.getStudentNumber(),
                 profile.getBio(),
                 profile.getSkills(),
                 profile.getResumeLink()
@@ -58,5 +66,10 @@ public class ProfileService implements IProfileService {
     @Override
     public List<Profile> getAll() {
         return profileRepository.findAll();
+    }
+
+    @Override
+    public Optional<Profile> getProfileByStudentNumber(String studentNumber) {
+        return profileRepository.findByStudentNumber(studentNumber);
     }
 }

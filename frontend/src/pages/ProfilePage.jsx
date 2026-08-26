@@ -1,19 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Plus, User, Link as LinkIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { createProfile } from '../services/profileService';
+import { createProfile, updateProfile, getProfileByStudentNumber } from '../services/profileService';
 
 export default function ProfilePage() {
     const { user } = useAuth();
 
+    const [profileId, setProfileId] = useState(null);
     const [bio, setBio] = useState('');
     const [skills, setSkills] = useState([]);
     const [skillInput, setSkillInput] = useState('');
     const [resumeLink, setResumeLink] = useState('');
     const [linkedinUrl, setLinkedinUrl] = useState('');
 
+    const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState(null);
+
+    // On page load, check if this student already has a saved profile.
+    useEffect(() => {
+        const loadExistingProfile = async () => {
+            if (!user?.studentNumber) {
+                setLoading(false);
+                return;
+            }
+            try {
+                const existing = await getProfileByStudentNumber(user.studentNumber);
+                if (existing) {
+                    setProfileId(existing.profileId);
+                    setBio(existing.bio || '');
+                    setSkills(existing.skills || []);
+                    setResumeLink(existing.resumeLink || '');
+                }
+            } catch (err) {
+                // No existing profile for this student yet - that's fine, show a blank form.
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadExistingProfile();
+    }, [user]);
 
     const addSkill = () => {
         const trimmed = skillInput.trim();
@@ -43,11 +70,25 @@ export default function ProfilePage() {
             return;
         }
 
+        if (!user?.studentNumber) {
+            setMessage({ type: 'error', text: 'You must be logged in as a student to save a profile.' });
+            return;
+        }
+
         setSaving(true);
         try {
-            const payload = { bio, skills, resumeLink };
-            await createProfile(payload);
-            setMessage({ type: 'success', text: 'Profile saved successfully!' });
+            if (profileId) {
+                // Existing profile -> update it
+                const payload = { profileId, studentNumber: user.studentNumber, bio, skills, resumeLink };
+                await updateProfile(payload);
+                setMessage({ type: 'success', text: 'Profile updated successfully!' });
+            } else {
+                // No existing profile -> create a new one
+                const payload = { studentNumber: user.studentNumber, bio, skills, resumeLink };
+                const saved = await createProfile(payload);
+                setProfileId(saved.profileId);
+                setMessage({ type: 'success', text: 'Profile saved successfully!' });
+            }
         } catch (err) {
             setMessage({ type: 'error', text: 'Failed to save profile. Please try again.' });
         } finally {
@@ -55,11 +96,19 @@ export default function ProfilePage() {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="max-w-4xl mx-auto px-4 py-10 text-center text-text-muted">
+                Loading your profile...
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-card-bg border border-ui-border rounded-2xl shadow-sm p-6">
                 <h1 className="font-heading text-2xl font-bold text-text-main mb-1">
-                    Build Your Profile
+                    {profileId ? 'Edit Your Profile' : 'Build Your Profile'}
                 </h1>
                 <p className="text-text-muted text-sm mb-6">
                     Add your bio, skills, and links so companies can find you.
@@ -165,7 +214,7 @@ export default function ProfilePage() {
                         disabled={saving}
                         className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-medium rounded-xl py-2.5 transition-colors disabled:opacity-60"
                     >
-                        {saving ? 'Saving...' : 'Save Profile'}
+                        {saving ? 'Saving...' : profileId ? 'Update Profile' : 'Save Profile'}
                     </button>
                 </form>
             </div>

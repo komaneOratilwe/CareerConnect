@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import za.ac.cput.domain.Profile;
 
+import java.util.Optional;
+
 /*
  * IProfileRepository.java
  * IProfileRepository interface
@@ -12,4 +14,5 @@ import za.ac.cput.domain.Profile;
  */
 @Repository
 public interface IProfileRepository extends JpaRepository<Profile, String> {
+    Optional<Profile> findByStudentNumber(String studentNumber);
 }
