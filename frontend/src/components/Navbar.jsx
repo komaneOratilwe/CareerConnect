@@ -162,7 +162,7 @@ export default function Navbar() {
                                 <button
                                     onClick={handleLogout}
                                     title="Log Out"
-                                    className="p-2 ml-1 mr-1 text-text-muted hover:text-rose-400 bg-card-bg/50 hover:bg-rose-950/30 border border-ui-border hover:border-rose-800 rounded-xl transition-all cursor-pointer"
+                                    className="p-2 ml-1 mr-1 text-text-muted hover:text-rose-600 bg-card-bg hover:bg-rose-50 border border-ui-border hover:border-rose-200 rounded-xl transition-all cursor-pointer shadow-sm"
                                 >
                                     <LogOut className="w-4 h-4" />
                                 </button>
@@ -235,7 +235,7 @@ export default function Navbar() {
                                     </div>
                                     <button
                                         onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                                        className="text-xs text-rose-400 font-medium border border-rose-900/50 px-3 py-1 rounded-lg"
+                                        className="text-xs text-rose-600 hover:text-rose-700 font-semibold bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
                                     >
                                         Log Out
                                     </button>

@@ -11,7 +11,10 @@ import {
     CheckCircle2,
     AlertCircle,
     Loader2,
-    Briefcase
+    Briefcase,
+    Eye,
+    EyeOff,
+    Shield
 } from 'lucide-react';
 import { createStudent } from '../services/studentService';
 import { useAuth } from '../context/AuthContext';
@@ -25,6 +28,13 @@ export default function SignupPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const { login } = useAuth();
+
+    // Password Visibility Toggles
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    // POPIA Consent State
+    const [popiaConsent, setPopiaConsent] = useState(false);
 
     const [formData, setFormData] = useState({
         studentNumber: '',
@@ -45,6 +55,13 @@ export default function SignupPage() {
         e.preventDefault();
         setError('');
 
+        // 1. POPIA Consent Validation
+        if (!popiaConsent) {
+            setError('You must accept the POPIA data privacy terms to create an account.');
+            return;
+        }
+
+        // 2. Password Matching Validation
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match. Please verify your password.');
             return;
@@ -54,6 +71,7 @@ export default function SignupPage() {
 
         try {
             if (role === 'STUDENT') {
+                // Auto-generate official CPUT Student Email
                 const generatedCputEmail = `${formData.studentNumber.trim()}@mycput.ac.za`;
 
                 const studentPayload = {
@@ -91,6 +109,7 @@ export default function SignupPage() {
         <div className="min-h-[calc(100vh-5rem)] bg-app-bg flex items-center justify-center p-4 sm:p-6 lg:p-8">
             <div className="w-full max-w-5xl bg-card-bg/90 border border-ui-border rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 backdrop-blur-xl">
 
+                {/* LEFT COLUMN: Hero & Branding Banner */}
                 <div className="lg:col-span-5 bg-gradient-to-br from-brand-primary/10 via-card-bg to-brand-accent/5 p-8 sm:p-10 border-b lg:border-b-0 lg:border-r border-ui-border relative overflow-hidden flex flex-col justify-between">
                     <div className="absolute top-0 right-0 -mt-12 -mr-12 w-48 h-48 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -158,6 +177,7 @@ export default function SignupPage() {
                     </div>
                 </div>
 
+                {/* RIGHT COLUMN: Role-Based Registration Form */}
                 <div className="lg:col-span-7 p-8 sm:p-10 flex flex-col justify-center">
 
                     {/* Header */}
@@ -196,8 +216,8 @@ export default function SignupPage() {
 
                     {/* Error Banner */}
                     {error && (
-                        <div className="flex items-center space-x-2 bg-rose-950/40 border border-rose-800 text-rose-300 p-3.5 rounded-xl text-xs mb-6">
-                            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                        <div className="flex items-center space-x-2 bg-rose-50 border border-rose-200 text-rose-900 p-3.5 rounded-xl text-xs font-semibold shadow-sm mb-6">
+                            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                             <span>{error}</span>
                         </div>
                     )}
@@ -222,8 +242,8 @@ export default function SignupPage() {
                                             name="studentNumber"
                                             value={formData.studentNumber}
                                             onChange={handleChange}
-                                            placeholder="e.g. 240480151"
-                                            autoComplete="off"
+                                            placeholder="e.g. 240456890"
+                                            autoComplete="username"
                                             required
                                             className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main placeholder-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all font-mono"
                                         />
@@ -252,8 +272,8 @@ export default function SignupPage() {
                                             name="name"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            placeholder="e.g. Ebenezer Kouakou"
-                                            autoComplete="off"
+                                            placeholder="e.g. Thamiso Tandeke"
+                                            autoComplete="name"
                                             required
                                             className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main placeholder-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all"
                                         />
@@ -278,7 +298,7 @@ export default function SignupPage() {
                                             value={formData.companyId}
                                             onChange={handleChange}
                                             placeholder="e.g. C001"
-                                            autoComplete="off"
+                                            autoComplete="username"
                                             required
                                             className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main font-mono"
                                         />
@@ -300,7 +320,7 @@ export default function SignupPage() {
                                             value={formData.name}
                                             onChange={handleChange}
                                             placeholder="e.g. TechNova Systems"
-                                            autoComplete="off"
+                                            autoComplete="name"
                                             required
                                             className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main"
                                         />
@@ -320,7 +340,7 @@ export default function SignupPage() {
                                             value={formData.companyEmail}
                                             onChange={handleChange}
                                             placeholder="e.g. hr@technova.co.za"
-                                            autoComplete="off"
+                                            autoComplete="email"
                                             required
                                             className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main"
                                         />
@@ -340,7 +360,6 @@ export default function SignupPage() {
                                             value={formData.industry}
                                             onChange={handleChange}
                                             placeholder="e.g. Software Development"
-                                            autoComplete="off"
                                             required
                                             className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main"
                                         />
@@ -357,14 +376,22 @@ export default function SignupPage() {
                                     <Lock className="w-4 h-4" />
                                 </div>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="••••••••"
+                                    autoComplete="new-password"
                                     required
-                                    className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main font-mono"
+                                    className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-10 py-2.5 text-xs text-text-main font-mono"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-main cursor-pointer"
+                                >
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
                             </div>
                         </div>
 
@@ -376,22 +403,45 @@ export default function SignupPage() {
                                     <Lock className="w-4 h-4" />
                                 </div>
                                 <input
-                                    type="password"
+                                    type={showConfirmPassword ? "text" : "password"}
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
                                     placeholder="••••••••"
+                                    autoComplete="new-password"
                                     required
-                                    className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-main font-mono"
+                                    className="w-full bg-app-bg border border-ui-border focus:border-brand-accent rounded-xl pl-10 pr-10 py-2.5 text-xs text-text-main font-mono"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-main cursor-pointer"
+                                >
+                                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
                             </div>
+                        </div>
+
+                        {/* POPIA Consent Checkbox */}
+                        <div className="pt-2">
+                            <label className="flex items-start space-x-2.5 cursor-pointer select-none">
+                                <input
+                                    type="checkbox"
+                                    checked={popiaConsent}
+                                    onChange={(e) => setPopiaConsent(e.target.checked)}
+                                    className="mt-0.5 w-4 h-4 text-brand-primary border-ui-border rounded focus:ring-brand-accent cursor-pointer"
+                                />
+                                <span className="text-[11px] text-text-muted leading-tight">
+                                    I consent to CareerConnect processing my personal and academic data for recruitments in accordance with the <strong>Protection of Personal Information Act (POPIA)</strong>.
+                                </span>
+                            </label>
                         </div>
 
                         {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold py-3 px-4 rounded-xl text-xs shadow-lg shadow-brand-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center space-x-2 mt-2 disabled:opacity-50 cursor-pointer"
+                            className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold py-3 px-4 rounded-xl text-xs shadow-lg shadow-brand-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center space-x-2 mt-3 disabled:opacity-50 cursor-pointer"
                         >
                             {loading ? (
                                 <>

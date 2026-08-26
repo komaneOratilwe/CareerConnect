@@ -34,7 +34,12 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const student = await getStudentByEmail(credentials.email);
+            let searchEmail = credentials.email.trim();
+            if (!searchEmail.includes('@')) {
+                searchEmail = `${searchEmail}@mycput.ac.za`;
+            }
+
+            const student = await getStudentByEmail(searchEmail);
 
             if (student && student.password === credentials.password) {
                 const userSession = {
@@ -44,10 +49,9 @@ export default function LoginPage() {
                     role: 'STUDENT'
                 };
                 login(userSession);
-
                 navigate(from, { replace: true });
             } else {
-                setError('Invalid email or password. Please try again.');
+                setError('Invalid credentials. Please check your Student Number/Email and Password.');
             }
         } catch (err) {
             setError('Could not verify credentials. Ensure Spring Boot backend is running.');
@@ -72,8 +76,8 @@ export default function LoginPage() {
 
                 {/* Error Banner */}
                 {error && (
-                    <div className="flex items-center space-x-2 bg-rose-950/40 border border-rose-800 text-rose-300 p-3.5 rounded-xl text-xs mb-6">
-                        <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                    <div className="flex items-center space-x-2 bg-rose-50 border border-rose-200 text-rose-900 p-3.5 rounded-xl text-xs font-semibold shadow-sm mb-6">
+                        <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                         <span>{error}</span>
                     </div>
                 )}
@@ -83,13 +87,15 @@ export default function LoginPage() {
 
                     {/* Email Input */}
                     <div>
-                        <label className="block text-xs font-semibold text-text-muted mb-1.5">Email Address</label>
+                        <label className="block text-xs font-semibold text-text-muted mb-1.5">
+                            CPUT Student Number or Email Address
+                        </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                                 <Mail className="w-4 h-4" />
                             </div>
                             <input
-                                type="email"
+                                type="text"
                                 name="email"
                                 value={credentials.email}
                                 autoComplete="off"
